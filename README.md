@@ -34,7 +34,7 @@ Configuration is passed to the constructor.
 pronto({ port: 8474 }); // HTTP server is now listening on port 8474
 ```
 
-Read more about [Configuration](../../tree/master/docs/configuration.md)
+Read more about [Configuration](../../blob/master/docs/configuration.md)
 
 ## Event-driven
 
