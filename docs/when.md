@@ -1,114 +1,119 @@
 `prontojs` When
 =============
 
-# As a function
-
-As a function, it is a sugar for `when.request.url`.
-
 ```js
-// This
-pronto().send ( new Date(), when ( '/what/time/is/it' ) );
+// A simple extension we'll use for more readibility in our examples
 
-// ... is the same than this
-pronto().send ( new Date(), when.request.url ( '/what/time/is/it' ) );
+pronto.extend.greet = function ( when ) {
+  this.send( 'hello' );
+};
 ```
 
-# development
-
-As a silent function, it is a sugar for `when.request.environment("development")`.
+# when
 
 ```js
-// This
-pronto().send ( 'Nohting works :(', when.development );
-
-// ... is the same than this
-pronto().send ( 'Nohting works :(', when.request.environment ( 'development' ) );
+pronto().greet( when( '/' ) );
+// Sugar for:
+pronto().greet ( when.url( '/' ) );
 ```
 
-# get
-
-As a silent function, it is a sugar for `when.request.method("GET")`.
+## when.dev
 
 ```js
-// This
-pronto().send ( 'GET is better than POST', when.get );
-
-// ... is the same than this
-pronto().send ( 'GET is better than POST', when.request.method ( 'GET' ) );
+pronto().greet( when.dev );
+// Sugar for:
+pronto().greet ( when.env( 'development' ) );
 ```
 
-# post
-
-As a silent function, it is a sugar for `when.request.method("POST")`.
+## when.development
 
 ```js
-// This
-pronto().send ( 'POST is better than GET', when.post );
-
-// ... is the same than this
-pronto().send ( 'POST is better than GET', when.request.method ( 'POST' ) );
+pronto().greet( when.development );
+// Sugar for:
+pronto().greet ( when.env( 'development' ) );
 ```
 
-# production
+## when.is
+
+### when.is.post
+
+```js
+pronto().greet ( when.is.post );
+// Sugar for:
+pronto().greet ( when.method( 'post' ) );
+```
+## when.get
+
+```js
+pronto().greet ( when.get );
+// Sugar for:
+pronto().greet ( when.method( 'get' ) );
+```
+
+## when.not
+
+Reverse a when
+
+```js
+pronto().greet ( when.not( when( '/' ) ) );
+// Same than:
+pronto().greet ( when.url.not( '/' ) );
+```
+
+### when.not.get
+
+```js
+pronto().greet ( when.not.get );
+// Sugar for:
+pronto().greet ( when.method.not( 'get' ) );
+```
+
+## when.post
+
+```js
+pronto().greet ( when.post );
+// Sugar for:
+pronto().greet ( when.method( 'post' ) );
+```
+
+## when.production
 
 As a silent function, it is a sugar for `when.request.environment("production")`.
 
 ```js
-// This
-pronto().send ( 'Everyhting works :)', when.production );
-
-// ... is the same than this
-pronto().send ( 'Everyhting works :)', when.request.environment ( 'production' ) );
+pronto().greet ( when.production );
+// Sugar for:
+pronto().greet ( when.env( 'production' ) );
 ```
 
-# request
-
-As a function, it is a sugar for `when.request.url`.
+## when.request
 
 ```js
-// This
-pronto().send ( 1 + 1, when.request ( '/how/much/is/1+1' ) );
-
-// ... is the same than this
-pronto().send ( 1 + 1, when.request.url ( '/how/much/is/1+1' ) );
+pronto().greet ( when.request( '/' ) );
+// Sugar for:
+pronto().greet ( when.url( '/' ) );
 ```
 
-## request.url
-
-As a function, it adds a route filter
+### when.request.url
 
 ```js
-// Pronto
-pronto().send ( 42, when.request.url ( '/what-is-the-answer-to-everything' ) );
-
-// Express
-app.use ( '/what-is-the-answer-to-everything', function (req, res) {
-  return res.send(42);
-  });
+pronto().greet ( when.request.url( '/' ) );
+// Sugar for:
+pronto().greet ( when.url( '/' ) );
 ```
 
-### request.url.is
-
-As a function, it is a sugar for `when.request.url`
+#### when.request.url.is
 
 ```js
-// This
-pronto().send ( pronto.url, when.request.url.is ( '/echo' ) );
-
-// ... is the same than this
-pronto().send ( pronto.url, when.request.url ( '/echo' ) );
+pronto().greet ( when.request.url.is( '/' ) );
+// Sugar for:
+pronto().greet ( when.url( '/' ) );
 ```
 
-## request.method
-
-As a function, it sets the method.
+### when.request.method
 
 ```js
-// Pronto
-pronto().send ( 'POST not authorized', when.request.method ( 'POST' ) );
-
-// Express
-app.post ( function (req, res) {
-  return res.send('POST not authorized');
-  });
+pronto().send ( when.request.method( 'POST' ) );
+// Sugar for:
+pronto().greet ( when.method( 'POST' ) );
 ```
