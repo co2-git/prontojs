@@ -4,7 +4,7 @@
 ```js
 // A simple extension we'll use for more readibility in our examples
 
-pronto.extend.greet = function ( when ) {
+pronto.extend.greet = function () {
   this.send( 'hello' );
 };
 ```
