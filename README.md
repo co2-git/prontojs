@@ -44,10 +44,10 @@ The most basic role of a web server is to serve files. That's where `open()` com
 
 ```js
 // Make a file browserable
-pronto( 'http://localhost:3000' ).open( 'index.html' );
+pronto().open( 'index.html' );
 
 // Make a directory browserable
-pronto( 'http://localhost:3000' ).open.directory( 'public' );
+pronto().open.directory( 'public' );
 ```
 
 Read more about openers and how to create custom openers.
