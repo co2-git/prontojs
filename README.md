@@ -96,13 +96,11 @@ if ( 'development' === app.get( 'env' ) ) {
   });
   
 // In pronto
-var when = pronto.when
-
 pronto().send( 'Welcome',
   when
     .post( '/sign/in' )
     .and.env( 'development' )
-    .and.has.cookie( 'cookie_monster' )
+    .and.has.signed.cookie( 'cookie_monster' )
   );
 ```
 
