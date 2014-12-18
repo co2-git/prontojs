@@ -1,0 +1,32 @@
+{
+  "name": "prontojs",
+  "version": "0.1.0",
+  "description": "Web server based on Express",
+  "main": "lib/Pronto.js",
+  "dependencies": {
+    "colors": "~1.0.3",
+    "express": "~4.10.6",
+    "body-parser": "~1.10.0",
+    "jade": "~1.8.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/co2-git/prontojs.git"
+  },
+  "keywords": [
+    "pronto",
+    "express",
+    "http",
+    "https",
+    "server"
+  ],
+  "author": "francoisv",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/co2-git/prontojs/issues"
+  }
+}
