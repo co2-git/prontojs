@@ -104,32 +104,22 @@ You can pass filtering to most operations using `when`.
 ```js
 // In express
 
-app.post( '/sign/in', function (req, res) {
-  res.send( 'Welcome' );
-});
+if ( 'development' === app.get( 'env' ) ) {
+  app.post( '/sign/in', function (req, res) {
+    if ( req.signedCookies.cookie_monster ) {
+      res.send( 'Welcome back!' );
+    }
+  });
   
 // In pronto
 var when = pronto.when
 
-pronto().send( 'Welcome', when.post( '/sign/in' ) );
-```
-
-`when` is really versatile and offers suppport for statcking filters based on routes - or other mechanisms (HTTP verb, environment, etc.).
-
-```js
-// can you guess what this does? :)
-
-pronto().send('I am fine',
-  
+pronto().send( 'Welcome',
   when
-    
-    .url.is('/question/how-are-you', '/question/are-you-fine')
-    
-    .and.method.is('post', 'put')
-    
-    .and.payload.has.Number('token')
-    
-    .and.environment.is('production')
+    .post( '/sign/in' )
+    .and.env( 'development' )
+    .and.has.cookie( 'cookie_monster' )
+  )
 );
 ```
 
