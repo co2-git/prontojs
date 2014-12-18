@@ -36,77 +36,35 @@ pronto({ port: 8474 }); // HTTP server is now listening on port 8474
 
 Read more about [Configuration](../../blob/master/docs/configuration.md)
 
-## Open - Static servers
+## The file browser approach
 
-The most basic role of a web server is to serve local files by mapping a URL to a file path.
+The most basic role of a web server is to serve local files. That's where `open()` comes in
 
 ```js
 // Open a file
 pronto().open ( 'index.html' );
 
-// You can also open a directory,
-//    in which case URL will be mapped 
-//    to a file from that directory
+// Open a file on a specific URL
+pronto().open ( 'contact.html', when ( '/contact' ) );
+
+// You can specify a custom opener
+pronto().open ( 'index.jade', { with: 'jade' } );
+
+// Custom openers can be set at configuration time
+pronto({ 'open with': { '*.jade': 'jade' } )
+  .open ('index.jade' );
+
+// You can also open a directory
 pronto().open ( 'public' );
 
-// You can specify a mapping
-pronto().open ( 'css', when('/css') );
-// Or using route parameters
-pronto().open ( 'pages/:page.html', when('/pages/:page') );
+// And specify an opener for the directory
+pronto().open ( 'views', { with: 'jade' } );
+
+// Some powerful openers
+pronto().open.directory ( 'models', { with: 'modelWrapper' }, when ( '/models/:model' ) );
 ```
 
-## Open - Templates and views
-
-Template engines show a more advanced usage of `prontojs`, in which you can declare a 'open with' property.
-
-```js
-// Render HTML of index.jade
-pronto().open ( 'index.jade', { with: 'jade' } );
-```
-
-A default "open with" can be set at configuration time:
-
-```js
-pronto( { "open with": { "*.jade": "jade" } ) )
-  .open ( 'views/' );
-```
-
-## Open - Map to a function
-
-Converting an HTTP request to parameters to pass to a JavaScript function and display the response of that function in JSON is tedious to write. The powerful `modelWrapper` takes care of that in one one-liner. 
-
-```js
-// In Express
-
-app.get( '/api/models/User', function (req, res) {
-  require( 'lib/models/User.js' )
-    .find(req.query, function (error, found) {
-      if ( error ) throw error;
-      res.json(found);
-    });
-});
-
-app.post( '/api/models/User', function (req, res) {
-  require( 'lib/models/User.js' )
-    .create(req.body, function (error, created) {
-      if ( error ) throw error;
-      res.json(created);
-    });
-});
-
-app.put ( ... );
-app.delete ( ... );
-
-// With Pronto
-
-pronto().open ( 'lib/models/User.js', { with: 'modelWrapper' }, when.url.is ( '/api/models/User' ) );
-```
-
-This can also be applied to a directory:
-
-```js
-pronto().open ( 'lib/models/:model.js', { with: 'functionMapper' }, when.url.is ( '/api/models/:model' ) );
-```
+Read more about openers and how to create custom openers.
 
 ## Event-driven
 
