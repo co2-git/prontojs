@@ -101,7 +101,7 @@ pronto().send( 'Welcome',
     .and.env( 'development' )
     
     /** .. and has signed cookie named "cookie123" */
-    .and.has.signed.cookie( 'cookie123' )
+    .and.signed.cookie( 'cookie123' )
   );
 ```
 
