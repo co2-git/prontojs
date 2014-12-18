@@ -38,32 +38,14 @@ Read more about [Configuration](../../blob/master/docs/configuration.md)
 
 ## The file browser approach
 
-The most basic role of a web server is to serve files. That's where `open()` comes in
+The most basic role of a web server is to serve files. That's where `open()` comes in.
 
 ```js
-// Open a file
-pronto().open( 'index.html' );
+// Make a file browserable
+pronto( 'http://localhost:3000' ).open( 'index.html' );
 
-// Open a file on a specific URL
-var when = pronto.when;
-
-pronto().open( 'contact.html', when( '/contact' ) );
-
-// You can specify a custom opener
-pronto().open( 'index.jade', { with: 'jade' } );
-
-// Custom openers can be set at configuration time
-pronto({ 'open with': { '*.jade': 'jade' } )
-  .open( 'index.jade' );
-
-// You can also open a directory
-pronto().open( 'public' );
-
-// And specify an opener for the directory
-pronto().open( 'views', { with: 'jade' } );
-
-// Some powerful openers
-pronto().open.directory( 'models', { with: 'modelWrapper' }, when( '/models/:model' ) );
+// Make a directory browserable
+pronto( 'http://localhost:3000' ).open.directory( 'public' );
 ```
 
 Read more about openers and how to create custom openers.
