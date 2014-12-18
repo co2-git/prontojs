@@ -15,7 +15,7 @@ pronto().send ( new Date(), when.request.url ( '/what/time/is/it' ) );
 
 # development
 
-As a function, it is a sugar for `when.request.environment("development")`.
+As a silent function, it is a sugar for `when.request.environment("development")`.
 
 ```js
 // This
@@ -25,9 +25,21 @@ pronto().send ( 'Nohting works :(', when.development );
 pronto().send ( 'Nohting works :(', when.request.environment ( 'development' ) );
 ```
 
+# get
+
+As a silent function, it is a sugar for `when.request.method("GET")`.
+
+```js
+// This
+pronto().send ( 'GET is better than POST', when.get );
+
+// ... is the same than this
+pronto().send ( 'GET is better than POST', when.request.method ( 'GET' ) );
+```
+
 # post
 
-As a function, it is a sugar for `when.request.method("POST")`.
+As a silent function, it is a sugar for `when.request.method("POST")`.
 
 ```js
 // This
@@ -39,7 +51,7 @@ pronto().send ( 'POST is better than GET', when.request.method ( 'POST' ) );
 
 # production
 
-As a function, it is a sugar for `when.request.environment("production")`.
+As a silent function, it is a sugar for `when.request.environment("production")`.
 
 ```js
 // This
