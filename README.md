@@ -81,35 +81,6 @@ pronto().open(
 
 Read more about openers and how to create custom openers.
 
-## Event-driven
-
-`prontojs` inherits from `EventEmitter` and emits events such as:
-
-| Event | Triggered |
-|-------|-----------|
-| **listening** | When HTTP server is listening and ready to take connections |
-| **error** | When HTTP server encounters an error (at boottime or at runtime) |
-| **request** | When HTTP server receives a request |
-| **response** | When HTTP server emits a response |
-
-You can see the complete list of events below in the Events section
-
-## Faster access to response actions
-
-Response actions (`send`, `render`, `redirect`, etc) can be called directly from the server.
-
-```js
-// In express
-
-app.use( function (req, res) {
-  res.send( 'Hello world' );
-});
-  
-// In pronto
-
-pronto().send( 'Hello world' );
-```
-
 ## Powerful filtering with `when`
 
 You can pass filtering to most operations using `when`.
@@ -122,10 +93,23 @@ pronto().open( 'html/contact.html', when( '/pages/contact.html' ));
 pronto().open( 'html/', when( '/pages' ) );
 
 // `when` offers powerful filtering
-pronto().open( 'html/', when( '/pages' ).and.cookie( '123' ).except.post );
+pronto().open( 'html/', when( '/pages' ).and.cookie( '123' ).and.not.post );
 ```
 
 Read more about [When](../../blob/master/docs/when.md)
+
+## Event-driven
+
+`prontojs` inherits from `EventEmitter` and emits events such as:
+
+| Event | Triggered |
+|-------|-----------|
+| **listening** | When HTTP server is listening and ready to take connections |
+| **error** | When HTTP server encounters an error (at boottime or at runtime) |
+| **request** | When HTTP server receives a request |
+| **response** | When HTTP server emits a response |
+
+You can see the complete list of events below in the Events section
 
 ## Express compatible
 
