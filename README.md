@@ -109,6 +109,7 @@ app.post( '/sign/in', function (req, res) {
 });
   
 // In pronto
+var when = pronto.when
 
 pronto().send( 'Welcome', when.post( '/sign/in' ) );
 ```
