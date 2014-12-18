@@ -50,6 +50,32 @@ pronto().open( 'index.html' );
 pronto().open( 'public/' );
 ```
 
+### Openers
+
+`prontojs` comes bundled with several openers, like the one for Jade:
+
+```js
+pronto().open( 'index.jade' ); // will be opened with the Jade opener
+```
+
+You can use another opener by forcing another content type:
+
+```js
+pronto().open( 'index.html', { as: 'text' } ); // open this file as plain text
+```
+
+### Open functions
+
+You can also open functions:
+
+```js
+// foo.js
+pronto().open( function (req) {
+    return "<h1>hello " + req.ip + "</h1>";
+  }, { as: 'html' } );
+```
+
+
 Read more about openers and how to create custom openers.
 
 ## Event-driven
