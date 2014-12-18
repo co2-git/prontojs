@@ -13,6 +13,18 @@ pronto().send ( new Date(), when ( '/what/time/is/it' ) );
 pronto().send ( new Date(), when.request.url ( '/what/time/is/it' ) );
 ```
 
+# post
+
+As a function, it is a sugar for `when.request.method("POST")`.
+
+```js
+// This
+pronto().send ( 'POST is better than GET', when.post );
+
+// ... is the same than this
+pronto().send ( 'POST is better than GET', when.request.method ( 'POST' ) );
+```
+
 # request
 
 As a function, it is a sugar for `when.request.url`.
