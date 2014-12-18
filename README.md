@@ -70,11 +70,14 @@ You can also open functions:
 
 ```js
 // foo.js
-pronto().open( function (req) {
-    return "<h1>hello " + req.ip + "</h1>";
-  }, { as: 'html' } );
+pronto().open(
+    
+  function (cb) {
+    return [1, 2, 3];
+  },
+  
+  { as: 'json' } ); // will return [1, 2, 3] with content type set to "application/json"
 ```
-
 
 Read more about openers and how to create custom openers.
 
