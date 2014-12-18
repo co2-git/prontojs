@@ -181,4 +181,3 @@ pronto
   // Session control
   .send ( 'Welcome registered user', when.has.session( { value: 123 } ) )
 ```
-  
