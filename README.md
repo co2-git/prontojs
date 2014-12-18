@@ -115,23 +115,14 @@ pronto().send( 'Hello world' );
 You can pass filtering to most operations using `when`.
 
 ```js
+// Use `when` to filter by routes
+pronto().open( 'html/contact.html', when( '/pages/contact.html' ));
 
-/** Send "Welcome" .. */ 
+// which could be batched by opening directly the directory
+pronto().open( 'html/', when( '/pages' ) );
 
-pronto().send( 'Welcome',
-  
-  /** .. if .. */
-  when
-    
-    /** .. method is POST and url is /sign/in */
-    .post( '/sign/in' )
-    
-    /** .. and environment is development */
-    .and.env( 'development' )
-    
-    /** .. and has signed cookie named "cookie123" */
-    .and.signed.cookie( 'cookie123' )
-  );
+// `when` can also be used to filter a wide range of attributes
+pronto().open( 'html/', when( '/pages' ).and.cookie( '123' ).except.post;
 ```
 
 Read more about [When](../../blob/master/docs/when.md)
