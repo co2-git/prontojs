@@ -121,8 +121,8 @@ pronto().open( 'html/contact.html', when( '/pages/contact.html' ));
 // which could be batched by opening directly the directory
 pronto().open( 'html/', when( '/pages' ) );
 
-// `when` can also be used to filter a wide range of attributes
-pronto().open( 'html/', when( '/pages' ).and.cookie( '123' ).except.post;
+// `when` offers powerful filtering
+pronto().open( 'html/', when( '/pages' ).and.cookie( '123' ).except.post );
 ```
 
 Read more about [When](../../blob/master/docs/when.md)
