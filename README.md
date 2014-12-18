@@ -13,7 +13,6 @@ npm install prontojs
 
 ```js
 var pronto = require('prontojs');
-var when = pronto.when;
 ```
 
 # Features
@@ -23,12 +22,13 @@ var when = pronto.when;
 Bootstrapping a HTTP server is quite straight-forward. Just invoke the constructor like this:
 
 ```js
-pronto (); // That's it!
+pronto();
+// That's it! A HTTP server is now listening on default port and is ready to take connections
 ```
 
 ## Configurable
 
-Configuration is passed to the constructor.
+Configuration can be passed to the constructor.
 
 ```js
 pronto({ port: 8474 }); // HTTP server is now listening on port 8474
@@ -38,7 +38,7 @@ Read more about [Configuration](../../blob/master/docs/configuration.md)
 
 ## The file browser approach
 
-The most basic role of a web server is to serve local files. That's where `open()` comes in
+The most basic role of a web server is to serve files. That's where `open()` comes in
 
 ```js
 // Open a file
@@ -52,7 +52,7 @@ pronto().open ( 'index.jade', { with: 'jade' } );
 
 // Custom openers can be set at configuration time
 pronto({ 'open with': { '*.jade': 'jade' } )
-  .open ('index.jade' );
+  .open ( 'index.jade' );
 
 // You can also open a directory
 pronto().open ( 'public' );
@@ -79,39 +79,37 @@ Read more about openers and how to create custom openers.
 
 You can see the complete list of events below in the Events section
 
-## Direct access to response actions from the app
+## Quicker access to response actions
 
-`prontojs` offers an interface to Express when the type of actions the HTTP server can perform (`send`, `render`, `redirect`, etc) are properties of the app server instead of being properties only of the HTTP response.
-
-```js
-// In express
-
-app.use(function (req, res) {
-  res.send('Hello world');
-});
-  
-// In pronto
-
-pronto().send('Hello world');
-```
-
-## Route filtering
-
-You can use routes also (using the same syntax than Express) by invoking `when`.
+Response actions (`send`, `render`, `redirect`, etc) can be called directly from the server.
 
 ```js
 // In express
 
-app.get('/hello', function (req, res) {
-  res.send('Hello world');
+app.use( function (req, res) {
+  res.send( 'Hello world' );
 });
   
 // In pronto
 
-pronto().send('Hello world', when('/hello'));
+pronto().send( 'Hello world' );
 ```
 
-## Any filtering
+## Powerful filtering
+
+You can pass filtering to most operations using `when`.
+
+```js
+// In express
+
+app.post( '/sign/in', function (req, res) {
+  res.send( 'Welcome' );
+});
+  
+// In pronto
+
+pronto().send( 'Welcome', when.post( '/sign/in' ) );
+```
 
 `when` is really versatile and offers suppport for statcking filters based on routes - or other mechanisms (HTTP verb, environment, etc.).
 
@@ -134,15 +132,6 @@ pronto().send('I am fine',
 
 Read more about [When](../../blob/master/docs/when.md)
 
-## View and template
-
-`prontojs` uses Jade by default and `views` as the default views directory. You can change that in configuration.
-
-```js
-pronto().render('home', when.home);
-// it will render 'views/home.jade' when '/' is called
-```
-
 ## Express compatible
 
 You can still use Express calling the `express` property:
@@ -159,57 +148,4 @@ pronto()
       res.send(app.locals.message);
     };
   });
-```
-
-## Easy to serve static file
-
-You can serve specific files with `open`:
-
-```js
-pronto().open ( 'index.html', when.home );
-// Will serve the file index.html when request is GET /
-```
-
-Or pinpoint a directory to a route prefix
-
-```js
-pronto().browse ( 'assets/css', when ('/css') );
-// Will serve the file assets/css/main.css if request is GET /css/main.css
-```
-
-## HTTP JSON API made easy
-
-```js
-pronto()
-  .monson ( '/:model/:action?'/ );
-```
-
-## True to HTTP
-
-```js
-pronto
-
-  // Streaming
-  .stream ( 'video.mp4', when('/watch') )
-  
-  // Uploading files
-  .upload ( when('/upload') )
-  
-  // IP Ban
-  .ipBan ( [IP] )
-  
-  // IP Restrict
-  .ipRestrict ( [IP] )
-  
-  // Cookies
-  .createCookie ( 'cookie-name', { value: 123 }, when.success('sign in'))
-  
-  // Cookie control
-  .view ( 'home', when.home.and.has.cookie('cookie-name') )
-  
-  // Session
-  .session ( { value: 123 } )
-  
-  // Session control
-  .send ( 'Welcome registered user', when.has.session( { value: 123 } ) )
 ```
