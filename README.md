@@ -28,10 +28,12 @@ pronto();
 
 ## Configurable
 
-Configuration can be passed to the constructor.
+Configuration can be passed in various ways to the constructor, all stackable. Examples:
 
 ```js
-pronto( 8080, { https: true } ); // HTTPS server is now listening on port 8080
+pronto( 8080 ); // Set port
+pronto( { https: true } ); // Use HTTPS protocol
+pronto( 'http://www.my-app.com' ) // URL shortcut
 ```
 
 Read more about [Configuration](../../blob/master/docs/configuration.md)
