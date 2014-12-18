@@ -97,7 +97,7 @@ app.use( function (req, res) {
 pronto().send( 'Hello world' );
 ```
 
-## Powerful filtering
+## Powerful filtering with `when`
 
 You can pass filtering to most operations using `when`.
 
@@ -119,8 +119,7 @@ pronto().send( 'Welcome',
     .post( '/sign/in' )
     .and.env( 'development' )
     .and.has.cookie( 'cookie_monster' )
-  )
-);
+  );
 ```
 
 Read more about [When](../../blob/master/docs/when.md)
