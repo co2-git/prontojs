@@ -1,4 +1,4 @@
-prontojs
+prontojs `alpha`
 ========
 
 Web server based on Express
@@ -28,11 +28,13 @@ pronto (); // That's it!
 
 ## Configurable
 
-Configuration is passed to the constructor. View section below about configuration.
+Configuration is passed to the constructor.
 
 ```js
 pronto({ port: 8474 }); // HTTP server is now listening on port 8474
 ```
+
+Read more about [Configuration](../master/docs/configuration.md)
 
 ## Event-driven
 
