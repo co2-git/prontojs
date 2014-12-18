@@ -65,7 +65,7 @@ Read more about openers and how to create custom openers.
 
 You can see the complete list of events below in the Events section
 
-## Quicker access to response actions
+## Daster access to response actions
 
 Response actions (`send`, `render`, `redirect`, etc) can be called directly from the server.
 
