@@ -83,7 +83,7 @@ pronto().send('Hello world', when('/hello'));
 
 ## Any filtering
 
-`when` is really versatile and offers suppport for statcking filters based on routes - or other mechanisms (HTTP verb, environment, etc.). See more in the `when` section.
+`when` is really versatile and offers suppport for statcking filters based on routes - or other mechanisms (HTTP verb, environment, etc.).
 
 ```js
 // can you guess what this does? :)
@@ -101,6 +101,8 @@ pronto().send('I am fine',
     .and.environment.is('production')
 );
 ```
+
+Read more about [When](../../blob/master/docs/when.md)
 
 ## View and template
 
