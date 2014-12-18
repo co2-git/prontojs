@@ -47,7 +47,7 @@ The most basic role of a web server is to serve files. That's where `open()` com
 pronto().open( 'index.html' );
 
 // Make a directory browserable
-pronto().open.directory( 'public' );
+pronto().open( 'public/' );
 ```
 
 Read more about openers and how to create custom openers.
