@@ -45,6 +45,8 @@ The most basic role of a web server is to serve files. That's where `open()` com
 pronto().open( 'index.html' );
 
 // Open a file on a specific URL
+var when = pronto.when;
+
 pronto().open( 'contact.html', when( '/contact' ) );
 
 // You can specify a custom opener
