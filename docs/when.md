@@ -1,28 +1,89 @@
 `prontojs` When
 =============
 
-```js
-// A simple extension we'll use for more readibility in our examples
-
-pronto.extend.greet = function () {
-  this.send( 'hello' );
-};
-```
-
-# when
+`when` is used to filter requests.
 
 ```js
-pronto().greet( when( '/' ) );
-// Sugar for:
-pronto().greet ( when.url( '/' ) );
+// This will be applied to EVERY requests
+server.greet();
+
+// This will be applied ONLY to requests with the URL /
+server.greet( when( '/' ) );
 ```
+
+`when` has different properties for finer control:
+
+```js
+// This will be applied ONLY to requests made with the GET method
+server.greet( when.method( 'GET' ) );
+```
+
+You can specify a reverse flag with `not`:
+
+```js
+// This will be applied ONLY to requests made with the GET method
+server.greet( when.method.not( 'GET' ) );
+```
+
+You can stack filters with `and`:
+
+```js
+// This will be applied ONLY to requests made with the GET method
+server.greet( when.method( 'GET' ).and.url( '/' ) );
+```
+
+You ca fine-grain stack filters with `or`:
+
+```js
+// This will be applied ONLY to requests made with the GET method
+server.greet( when.method( 'GET' ).or.url( '/' ) );
+```
+
+# API
+
+There are several ways you can call `when`:
+
+```js
+// when url
+pronto().greet( when( '/' ) ); // same as when.url("/")
+
+// when method
+pronto().greet( when( 'get' ) ); // same as when.method("get")
+
+// when environment
+pronto().greet( when( 'dev' ) ); // same as when.env("NODE_ENV", "dev")
+
+// when status
+pronto().greet( when( 200 ) ); // same as when.status(200)
+
+// when port
+pronto().greet( when( 3000 ) ); // same as when.port(3000)
+
+// when host
+pronto().greet( when( { host: 'localhost' } ) ); // same as when.host("localhost")
+
+// when https
+pronto().greet( when( 'http' ) ); // same as when.protocol("http")
+
+// when function
+pronto().greet( when( function () {
+    return new Date().getHours() > 8;
+  } ) );
+```
+
+Using `not` would reverse the filter
+
+```js
+
 
 ## when.dev
 
 ```js
-pronto().greet( when.dev );
-// Sugar for:
-pronto().greet ( when.env( 'development' ) );
+// when env
+pronto().greet( when.dev ); // same as when.env("NODE_ENV", "development")
+
+// when method
+pronto().greet( when( 'get' ) ); // same as when.method("get")
 ```
 
 ## when.development
@@ -66,6 +127,10 @@ pronto().greet ( when.url.not( '/' ) );
 pronto().greet ( when.not.get );
 // Sugar for:
 pronto().greet ( when.method.not( 'get' ) );
+
+pronto().greet ( when.not.get( '/' ) );
+// Sugar for:
+pronto().greet ( when.method.not( 'get' ).and.url.not( '/' ) );
 ```
 
 ## when.post
@@ -74,6 +139,10 @@ pronto().greet ( when.method.not( 'get' ) );
 pronto().greet ( when.post );
 // Sugar for:
 pronto().greet ( when.method( 'post' ) );
+
+pronto().greet ( when.post( '/' ) );
+// Sugar for:
+pronto().greet ( when.method( 'post' ).and.url.not( '/' ) );
 ```
 
 ## when.production
