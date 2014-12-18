@@ -86,22 +86,22 @@ pronto().send( 'Hello world' );
 You can pass filtering to most operations using `when`.
 
 ```js
-// In express
 
-if ( 'development' === app.get( 'env' ) ) {
-  app.post( '/sign/in', function (req, res) {
-    if ( req.signedCookies.cookie_monster ) {
-      res.send( 'Welcome back!' );
-    }
-  });
-  
-// In pronto
+/** Send "Welcome" .. */ 
 
 pronto().send( 'Welcome',
+  
+  /** .. if .. */
   when
+    
+    /** .. method is POST and url is /sign/in */
     .post( '/sign/in' )
+    
+    /** .. and environment is development */
     .and.env( 'development' )
-    .and.has.signed.cookie( 'cookie_monster' )
+    
+    /** .. and has signed cookie named "cookie123" */
+    .and.has.signed.cookie( 'cookie123' )
   );
 ```
 
