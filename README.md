@@ -31,7 +31,7 @@ pronto();
 Configuration can be passed to the constructor.
 
 ```js
-pronto(8080, { https: true } ); // HTTPS server is now listening on port 8080
+pronto( 8080, { https: true } ); // HTTPS server is now listening on port 8080
 ```
 
 Read more about [Configuration](../../blob/master/docs/configuration.md)
