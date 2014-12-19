@@ -17,6 +17,13 @@ var pronto = require('prontojs');
 
 # Features
 
+- Based on Express, Connect and Node's HTTP module
+- Short-hand syntax
+- Event-driven
+- Focus on serving files
+- Powerful and versatile filter syntax
+- Built-in with the most useful modules such as Passport or SocketIO
+
 ## Straight-forward
 
 Bootstrapping a HTTP server is quite straight-forward. Just invoke the constructor like this:
@@ -38,7 +45,7 @@ pronto( 'http://www.my-app.com' ) // URL shortcut
 
 Read more about [Configuration](../../blob/master/docs/configuration.md)
 
-## The file browser approach
+## The "Open File" approach
 
 The most basic role of a web server is to serve files. That's where `open()` comes in.
 
@@ -72,7 +79,7 @@ You can also open functions:
 // foo.js
 pronto().open(
     
-  function (cb) {
+  function () {
     return [1, 2, 3];
   },
   
@@ -113,18 +120,18 @@ You can see the complete list of events below in the Events section
 
 ## Express compatible
 
-You can still use Express calling the `express` property:
+You can still use Express calling the `app` property:
 
 ```js
-pronto()
-  .express(function (app) {
-    
-    // Now you interact directly with Express ...
-    
-    app.locals.message = 'Hello world';
-  
-    app.get('/', function (req, res) {
-      res.send(app.locals.message);
-    };
-  });
+var server = pronto();
+
+var app = server.app;
+
+// Now you can interact directly with Express ...
+
+app.locals.message = 'Hello world';
+
+app.get('/', function (req, res) {
+  res.send(app.locals.message);
+};
 ```
