@@ -51,10 +51,11 @@ pronto().open( 'images/' ); // Now all the files in images/ folder are served
 
 ```js
 pronto().open( 'images/',
+  
   when.visitor
     .is.a.registered.user.
     and
-    .is.visiting.from('Thaïland').
+    .is.visiting.from('Russia').
     and
     .is.using.an.iPhone(4).
   and
