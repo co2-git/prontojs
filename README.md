@@ -264,3 +264,61 @@ This is the one we use as default:
 ```js
 pronto.open ( { index: 'index.*' } );
 ```
+
+# Exec
+
+As seen before, some file extensions are automatically opened as executable:
+
+```js
+pronto.open( 'index.py' ); // execute this file with Python
+```
+
+JS files are opened as static JS files:
+
+```js
+pronto.open( 'index.js' );
+/**
+    GET /index.js
+    
+    HTTP 200 OK
+    Content-Type: text/javascript; charset=utf-8
+```
+
+If you want to open a JS file with Node or IO, do like this:
+
+```js
+// morning.js
+
+module.exports = function () {
+  return "Good morning";
+  };
+
+pronto.exec( 'morning.js', when.time.is( 'AM' ) );
+/**
+    GET /index.js
+    
+    HTTP 200 OK
+    Content-Type: text/javascript; charset=utf-8
+```
+
+You have flexible support
+
+# Passport
+
+We have passport.js for auth
+
+```js
+pronto().passport({ strategies: ['local', 'facebook', 'twitter', 'google+', 'linkedin', 'github'] });
+```
+
+## Local strategy
+
+```
+POST /sign/in email=john@doe.com&password=1234
+
+HTTP 200 OK
+Content-Type: application/json; charset=utf-8
+Cookie: ...
+
+{ "welcome": User }
+```
