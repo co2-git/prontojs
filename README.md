@@ -30,7 +30,13 @@ pronto().open( 'images/' );
 
 ```js
 pronto().open( 'images/',
-  when.visitor.is.a.registered.user.and.is.visiting.from('Thaïland').
+  when.visitor
+    .is.a.registered.user.
+    and
+    .is.visiting.from('Thaïland').
+    and
+    .is.using.an.iPhone(4).
+  and
     except.when.it.is.the.week.end);
 ```
 
