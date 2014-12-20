@@ -1,7 +1,7 @@
 prontojs `alpha`
 ========
 
-Web Server focusing on serving content rather than map routes with functions.
+Yet another HTTP server in Node!
 
 # Install
 
@@ -45,7 +45,49 @@ pronto().open( 'images/',
 ### Want to execute your JS files via HTTP?
 
 ```js
-pronto().exec ( 'lib/my-file.js' );
+// foo.js
+
+function () { return 'hello'; }
+
+// pronto.js
+
+pronto().exec ( 'foo.js', { as: 'text' } );
+// will return "hello"
+```
+
+Other scenarios:
+
+```js
+// CALLBACKS
+
+// foo.js
+
+function (done) { return done(null, { foo: true } ); }
+
+// pronto.js
+
+pronto().exec ( 'foo.js', { as: 'json', is: 'callback' } );
+// will return { "foo": true }
+
+// PROMISES
+
+// foo.js
+
+function (done) { return new Promise(); ); }
+
+// pronto.js
+
+pronto().exec ( 'foo.js', { is: 'promise' } );
+
+// HTTP MIDDLEWARES
+
+// foo.js
+
+function (req, res) { res.send('Hello') ); }
+
+// pronto.js
+
+pronto().exec ( 'foo.js', { is: 'server-middleware' } );
 ```
 
 ===
