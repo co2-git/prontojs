@@ -14,19 +14,19 @@ var pronto = require('prontojs');
 var when = pronto.when;
 ```
 
-# Want to start a new HTTP server?
+### Want to start a new HTTP server?
 
 ```js
 pronto();
 ```
 
-# Want to share a folder with the web?
+### Want to share a folder with the web?
 
 ```js
 pronto().open( 'images/' );
 ```
 
-# Want to restrict who you share it with?
+### Want to restrict who you share it with?
 
 ```js
 pronto().open( 'images/',
@@ -34,7 +34,7 @@ pronto().open( 'images/',
     except.when.it.is.the.week.end);
 ```
 
-# Want to execute your JS files via HTTP?
+### Want to execute your JS files via HTTP?
 
 ```js
 pronto().open ( 'lib/my-file.js' );
