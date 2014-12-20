@@ -22,12 +22,29 @@ var when = pronto.when;
 
 ```js
 pronto();
+/** 
+    GET /
+
+    HTTP 200 OK
+    ...
+*/
 ```
 
 ### Want to share a folder with the web?
 
+```
+/images
+  /birthday.jpg
+```
+
 ```js
-pronto().open( 'images/' );
+pronto().open( 'images/' ); // Now all the files in images/ folder are served
+/** 
+    GET /birthday.jpg
+
+    HTTP 200 OK
+    ...
+*/
 ```
 
 ### Want to restrict who you share it with?
@@ -49,47 +66,19 @@ pronto().open( 'images/',
 ```js
 // foo.js
 
-function () { return 'hello'; }
+module.exports = function () { return 'hello'; }
 
 // pronto.js
 
 pronto().exec ( 'foo.js', { as: 'text' } );
-// will return "hello"
-```
+/** 
+    GET /foo.js
 
-Other scenarios:
-
-```js
-// CALLBACKS
-
-// foo.js
-
-function (done) { return done(null, { foo: true } ); }
-
-// pronto.js
-
-pronto().exec ( 'foo.js', { as: 'json', is: 'callback' } );
-// will return { "foo": true }
-
-// PROMISES
-
-// foo.js
-
-function (done) { return new Promise(); ); }
-
-// pronto.js
-
-pronto().exec ( 'foo.js', { is: 'promise' } );
-
-// HTTP MIDDLEWARES
-
-// foo.js
-
-function (req, res) { res.send('Hello') ); }
-
-// pronto.js
-
-pronto().exec ( 'foo.js', { is: 'server-middleware' } );
+    HTTP 200 OK
+    Content-Type: text/plain; charset=utf-8
+    
+    hello
+*/
 ```
 
 ===
@@ -100,47 +89,120 @@ pronto().exec ( 'foo.js', { is: 'server-middleware' } );
 
 ```js
 pronto().open ( 'index.html' );
-// This will serve "index.html" with the content-type "text/html; charset=utf-8"
-pronto().open ( 'face.png' );
-// Works also with binary files
+/** 
+    GET /index.html
+    
+    HTTP 200 OK
+    Content-Type: text/html; charset=utf-8"
+    
+    ...
+*/
+
+pronto().open ( 'image.png' );
+/** 
+    GET /image.png
+    
+    HTTP 200 OK
+    Content-Type: image/png
+    
+    ...
+*/
 ```
 
-You can specify the content-type
+## Open as
 
 ```js
 pronto().open ( 'index.html', { as: 'txt' } );
-// index.html will now be served as a text
+/** 
+    GET /index.html
+    
+    HTTP 200 OK
+    Content-Type: text/plain; charset=utf-8
+    
+    ...
+*/
 ```
 
 We have built-in handlers for the more popular template engines:
 
-```js
-pronto().open ( 'index.jade' );
-// will be rendered into HTML
+```haml
+//- index.jade
+
+h1 Hello
 ```
 
-We have built-in handlers for the more popular preprocessors:
+```js
+// pronto.js
+
+pronto().open ( 'index.jade' );
+/** 
+    GET /index.jade
+    
+    HTTP 200 OK
+    Content-Type: text/html; charset=utf-8
+    
+    <h1>Hello</h1>
+*/
+```
+
+We have built-in handlers for the more popular preprocessors, for example SASS:
+
+```css
+/* index.scss */
+
+$color: #999;
+
+body { h1 { color: $color } }
+```
 
 ```js
-pronto().open ( 'index.scss' ); // will be rendered into CSS
-pronto().open ( 'index.less' ); // will be rendered into CSS
-pronto().open ( 'index.cs' ); // will be rendered into JS
+// pronto.js
+
+pronto().open ( 'index.scss' );
+/** 
+    GET /index.scss
+    
+    HTTP 200 OK
+    Content-Type: text/css; charset=utf-8
+    
+    body h1 { color: #999 }
+*/
 ```
 
 We have built-in handlers for the more popular interpreters:
 
+```php
+<?=PHP_VERSION
+```
+
 ```js
-pronto().open ( 'index.php' ); // will be executed with the PHP interpreter
-pronto().open ( 'index.rb' ); // will be executed with the Ruby
-pronto().open ( 'index.py' ); // will be executed with the Python interpreter
+pronto().open ( 'index.php' );
+/** 
+    GET /index.php
+    
+    HTTP 200 OK
+    Content-Type: text/html; charset=utf-8
+    
+    3.2.1
+*/
 ```
 
 ## Custom openers
 
 You can build your custom openers:
 
+```
+index.txt
+===
+Hello John!
+```
+
 ```js
-pronto().open ( 'file.txt', { with: function (stream) { /* your opener here */ } } );
+function countOccurencies () {
+  
+}
+
+pronto().open ( 'index.css', { with: function (stream) { /* your opener here */ } } );
 ```
 
 ## Custom types
