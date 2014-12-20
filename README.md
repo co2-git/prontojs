@@ -16,6 +16,8 @@ var when = pronto.when;
 
 ===
 
+# Some user cases
+
 ### Want to start a new HTTP server?
 
 ```js
