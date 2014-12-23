@@ -1,7 +1,7 @@
 prontojs `alpha`
 ========
 
-Web server based on Express
+Yet another HTTP server in Node!
 
 # Install
 
@@ -9,129 +9,316 @@ Web server based on Express
 npm install prontojs
 ```
 
-# Require
-
 ```js
 var pronto = require('prontojs');
+var when = pronto.when;
 ```
 
-# Features
+===
 
-- Based on Express, Connect and Node's HTTP module
-- Short-hand syntax
-- Event-driven
-- Focus on serving files
-- Powerful and versatile filter syntax
-- Built-in with the most useful modules such as Passport or SocketIO
+# Some user cases
 
-## Straight-forward
-
-Bootstrapping a HTTP server is quite straight-forward. Just invoke the constructor like this:
+### Want to start a new HTTP server?
 
 ```js
 pronto();
-// That's it! A HTTP server is now listening on default port and is ready to take connections
+/** 
+    GET /
+
+    HTTP 200 OK
+    ...
+*/
 ```
 
-## Configurable
+### Want to share a folder with the web?
 
-Configuration can be passed in various ways to the constructor, all stackable. Examples:
+```
+/images
+  /birthday.jpg
+```
 
 ```js
-pronto( 8080 ); // Set port
-pronto( { https: true } ); // Use HTTPS protocol
-pronto( 'http://www.my-app.com' ) // URL shortcut
+pronto().open( 'images/' ); // Now all the files in images/ folder are served
+/** 
+    GET /birthday.jpg
+
+    HTTP 200 OK
+    ...
+*/
 ```
 
-Read more about [Configuration](../../blob/master/docs/configuration.md)
-
-## The "Open File" approach
-
-The most basic role of a web server is to serve files. That's where `open()` comes in.
+### Want to restrict who you share it with?
 
 ```js
-// Make a file browserable
-pronto().open( 'index.html' );
-
-// Make a directory browserable
-pronto().open( 'public/' );
+pronto().open( 'images/',
+  
+  when.visitor
+    .is.a.registered.user.
+    and
+    .is.visiting.from('Russia').
+    and
+    .is.using.an.iPhone(4).
+  and
+    except.when.it.is.the.week.end);
 ```
 
-### Openers
-
-`prontojs` comes bundled with several openers, like the one for Jade:
-
-```js
-pronto().open( 'index.jade' ); // will be opened with the Jade opener
-```
-
-You can use another opener by forcing another content type:
-
-```js
-pronto().open( 'index.html', { as: 'text' } ); // open this file as plain text
-```
-
-### Open functions
-
-You can also open functions:
+### Want to execute your JS files via HTTP?
 
 ```js
 // foo.js
-pronto().open(
+
+module.exports = function () { return 'hello'; }
+
+// pronto.js
+
+pronto().exec ( 'foo.js', { as: 'text' } );
+/** 
+    GET /foo.js
+
+    HTTP 200 OK
+    Content-Type: text/plain; charset=utf-8
     
-  function () {
-    return [1, 2, 3];
-  },
+    hello
+*/
+```
+
+===
+
+# Open
+
+`prontojs` puts the focus on serving files
+
+```js
+pronto().open ( 'index.html' );
+/** 
+    GET /index.html
+    
+    HTTP 200 OK
+    Content-Type: text/html; charset=utf-8"
+    
+    ...
+*/
+
+pronto().open ( 'image.png' );
+/** 
+    GET /image.png
+    
+    HTTP 200 OK
+    Content-Type: image/png
+    
+    ...
+*/
+```
+
+## Open as
+
+```js
+pronto().open ( 'index.html', { as: 'txt' } );
+/** 
+    GET /index.html
+    
+    HTTP 200 OK
+    Content-Type: text/plain; charset=utf-8
+    
+    ...
+*/
+```
+
+We have built-in handlers for the more popular template engines:
+
+```haml
+//- index.jade
+
+h1 Hello
+```
+
+```js
+// pronto.js
+
+pronto().open ( 'index.jade' );
+/** 
+    GET /index.jade
+    
+    HTTP 200 OK
+    Content-Type: text/html; charset=utf-8
+    
+    <h1>Hello</h1>
+*/
+```
+
+We have built-in handlers for the more popular preprocessors, for example SASS:
+
+```css
+/* index.scss */
+
+$color: #999;
+
+body { h1 { color: $color } }
+```
+
+```js
+// pronto.js
+
+pronto().open ( 'index.scss' );
+/** 
+    GET /index.scss
+    
+    HTTP 200 OK
+    Content-Type: text/css; charset=utf-8
+    
+    body h1 { color: #999 }
+*/
+```
+
+We have built-in handlers for the more popular interpreters:
+
+```php
+<?=PHP_VERSION
+```
+
+```js
+pronto().open ( 'index.php' );
+/** 
+    GET /index.php
+    
+    HTTP 200 OK
+    Content-Type: text/html; charset=utf-8
+    
+    3.2.1
+*/
+```
+
+## Custom openers
+
+You can build your custom openers:
+
+```
+index.txt
+===
+Hello John!
+```
+
+```js
+function countOccurencies () {
   
-  { as: 'json' } ); // will return [1, 2, 3] with content type set to "application/json"
+}
+
+pronto().open ( 'index.css', { with: function (stream) { /* your opener here */ } } );
 ```
 
-Read more about openers and how to create custom openers.
+## Custom types
 
-## Powerful filtering with `when`
-
-You can pass filtering to most operations using `when`.
+You can build your custom types:
 
 ```js
-// Use `when` to filter by routes
-pronto().open( 'html/contact.html', when( '/pages/contact.html' ));
-
-// which could be batched by opening directly the directory
-pronto().open( 'html/', when( '/pages' ) );
-
-// `when` offers powerful filtering
-pronto().open( 'html/', when( '/pages' ).and.cookie( '123' ).and.not.post );
+pronto().type ( 'abc', function () { /* your opener here */  }  } );
 ```
 
-Read more about [When](../../blob/master/docs/when.md)
+## Open directories
 
-## Event-driven
+Opening a directory automatically opens all the files in this directory. Imagine the following directory:
 
-`prontojs` inherits from `EventEmitter` and emits events such as:
+```
+app/
+  index.html
+```
 
-| Event | Triggered |
-|-------|-----------|
-| **listening** | When HTTP server is listening and ready to take connections |
-| **error** | When HTTP server encounters an error (at boottime or at runtime) |
-| **request** | When HTTP server receives a request |
-| **response** | When HTTP server emits a response |
-
-You can see the complete list of events below in the Events section
-
-## Express compatible
-
-You can still use Express calling the `app` property:
+To serve this directory:
 
 ```js
-var server = pronto();
+pronto().open ( 'app/' );
+```
 
-var app = server.app;
+```bash
+curl http://localhost:3000/index.html # gets app/index.html
+```
 
-// Now you can interact directly with Express ...
+## Indexes
 
-app.locals.message = 'Hello world';
+The example above could have been shorted to:
 
-app.get('/', function (req, res) {
-  res.send(app.locals.message);
-};
+```bash
+curl http://localhost:3000/ # gets app/index.html
+```
+
+When the route points to a directory, it will get the file matching globbing pattern `index.*`. If more than one file is found, first in the list is used.
+
+```bash
+curl http://localhost:3000/js # gets app/js/index.js
+```
+
+You can turn off indexes like this;
+
+```js
+pronto.open ( { index: false } )
+```
+
+Or you can specify your own index:
+
+```js
+pronto.open ( { index: 'README.md' } );
+```
+
+This is the one we use as default:
+
+```js
+pronto.open ( { index: 'index.*' } );
+```
+
+# Exec
+
+As seen before, some file extensions are automatically opened as executable:
+
+```js
+pronto.open( 'index.py' ); // execute this file with Python
+```
+
+JS files are opened as static JS files:
+
+```js
+pronto.open( 'index.js' );
+/**
+    GET /index.js
+    
+    HTTP 200 OK
+    Content-Type: text/javascript; charset=utf-8
+```
+
+If you want to open a JS file with Node or IO, do like this:
+
+```js
+// morning.js
+
+module.exports = function () {
+  return "Good morning";
+  };
+
+pronto.exec( 'morning.js', when.time.is( 'AM' ) );
+/**
+    GET /index.js
+    
+    HTTP 200 OK
+    Content-Type: text/javascript; charset=utf-8
+```
+
+You have flexible support
+
+# Passport
+
+We have passport.js for auth
+
+```js
+pronto().passport({ strategies: ['local', 'facebook', 'twitter', 'google+', 'linkedin', 'github'] });
+```
+
+## Local strategy
+
+```
+POST /sign/in email=john@doe.com&password=1234
+
+HTTP 200 OK
+Content-Type: application/json; charset=utf-8
+Cookie: ...
+
+{ "welcome": User }
 ```
