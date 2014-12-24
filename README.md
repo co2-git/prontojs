@@ -1,7 +1,7 @@
 prontojs `alpha`
 ========
 
-Yet another HTTP server in Node!
+`prontojs` is a Node module that creates HTTP(S) daemons (*Web Servers*).
 
 # Install
 
@@ -9,9 +9,54 @@ Yet another HTTP server in Node!
 npm install prontojs
 ```
 
+# Use
+
 ```js
 var pronto = require('prontojs');
 var when = pronto.when;
+```
+
+# Pitch
+
+We take the angle of seeing web servers as resource handlers first. HTTP frameworks like `express.js` (*btw, `prontojs``is built on `express.js`*) takes the `Sinatra`'s approach of defining logics based on routing:
+
+```js
+var app = require('express')();
+
+app.set('view engine', 'jade');
+app.set('views', 'views');
+
+// Rendering view
+app.get('/views/:view', function (req, res) {
+  res.render(req.params.view);
+  });
+  
+// Logics
+app.post('/do/:action', function (req, res, next) {
+  require('./lib/' + req.params.action)(req.body, function (error, result) {
+    if ( error) return next(error);
+    res.json(result);
+  });
+  
+// Static
+app.use('/images', express.static('public/images'));
+```
+
+In Pronto.
+
+```js
+
+pronto()
+
+// Rendering view
+  
+  .open('views/', { as: 'jade' }, when.prefix('/views/'));
+  
+// Logics
+  .open('/lib/', { is: 'js/callback', as: 'json' }, when.prefix('/do/'))
+  
+// Static
+  .open('/public', when('/images/'));
 ```
 
 ===
