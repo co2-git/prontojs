@@ -1,7 +1,7 @@
 prontojs `alpha`
 ========
 
-`prontojs` is a Node module that creates HTTP(S) daemons (*Web Servers*).
+`prontojs` is a Node module that creates HTTP(S) daemons (*Web Servers*). `prontojs` creates web servers that focus on serving resources. You tell `prontojs` which files you want to share with the Web, under which conditions and how to open them.
 
 # Install
 
@@ -14,66 +14,20 @@ npm install prontojs
 ```js
 var pronto = require('prontojs');
 var when = pronto.when;
+
+// Create a new web server serving images
+pronto().share('images/');
+
+// Create a new web server as API
+pronto().share('lib/', {
+  opener: 'js/callback',
+  args: [pronto.ifThenElse(pronto.method.is.post.or.put, pronto.payload, pronto.query)],
+  as: 'json' });
 ```
 
 # Utility
 
-`prontojs` began as a simple spin-off of `express.js` to access response methods (like `send`, `render`, `json`, `redirect`) directly from `app`. Basically I was fed up to write:
-
-```js
-app.get('/', function (req, res) {
-  res.render('home');
-  });
-```
-
-I wanted to write something like this instead:
-
-```js
-app.render('home').when.get('/');
-```
-
-
-We take the angle of seeing web servers as resource handlers first. HTTP frameworks like `express.js` (*btw, `prontojs` is built on `express.js`*) takes the `Sinatra`'s approach of defining logics based on routing:
-
-```js
-var app = require('express')();
-
-app.set('view engine', 'jade');
-app.set('views', 'views');
-
-// Rendering view
-app.get('/views/:view', function (req, res) {
-  res.render(req.params.view);
-  });
-  
-// Logics
-app.post('/do/:action', function (req, res, next) {
-  require('./lib/' + req.params.action)(req.body, function (error, result) {
-    if ( error) return next(error);
-    res.json(result);
-  });
-  
-// Static
-app.use('/images', express.static('public/images'));
-```
-
-In Pronto.
-
-```js
-
-pronto()
-
-// Rendering view
-  
-  .open('views/', { as: 'jade' }, when.prefix('/views/'));
-  
-// Logics
-  .open('/lib/', { is: 'js/callback', as: 'json' }, when.prefix('/do/'))
-  
-// Static
-  .open('/public', when('/images/'));
-```
-
+`prontojs` creates web servers that focus on serving resources. You tell `prontojs` which files you want to share with the Web, under which conditions and how to open them.
 ===
 
 # Some user cases
