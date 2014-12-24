@@ -9,16 +9,31 @@ prontojs `alpha`
 npm install prontojs
 ```
 
-# Use
+# Usage
 
 ```js
 var pronto = require('prontojs');
 var when = pronto.when;
 ```
 
-# Pitch
+# Utility
 
-We take the angle of seeing web servers as resource handlers first. HTTP frameworks like `express.js` (*btw, `prontojs``is built on `express.js`*) takes the `Sinatra`'s approach of defining logics based on routing:
+`prontojs` began as a simple spin-off of `express.js` to access response methods (like `send`, `render`, `json`, `redirect`) directly from `app`. Basically I was fed up to write:
+
+```js
+app.get('/', function (req, res) {
+  res.render('home');
+  });
+```
+
+I wanted to write something like this instead:
+
+```js
+app.render('home').when.get('/');
+```
+
+
+We take the angle of seeing web servers as resource handlers first. HTTP frameworks like `express.js` (*btw, `prontojs` is built on `express.js`*) takes the `Sinatra`'s approach of defining logics based on routing:
 
 ```js
 var app = require('express')();
