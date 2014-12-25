@@ -1,7 +1,7 @@
 prontojs `alpha`
 ========
 
-Yet another HTTP server in Node!
+`prontojs` is a Node module that creates HTTP(S) daemons (*Web Servers*). `prontojs` creates web servers that focus on serving resources. You tell `prontojs` which files you want to share with the Web, under which conditions and how to open them.
 
 # Install
 
@@ -9,28 +9,37 @@ Yet another HTTP server in Node!
 npm install prontojs
 ```
 
+# Usage
+
 ```js
 var pronto = require('prontojs');
 var when = pronto.when;
-```
 
-===
+// Create a new web server serving images
+pronto().share('images/');
+
+// Create a new web server as API
+pronto().share('lib/', {
+  opener: 'js/callback',
+  args: [pronto.ifThenElse(pronto.method.is.post.or.put, pronto.payload, pronto.query)],
+  as: 'json' });
+```
 
 # Some user cases
 
-### Want to start a new HTTP server?
+## Want to start a new HTTP server?
 
 ```js
 pronto();
 /** 
     GET /
 
-    HTTP 200 OK
+    HTTP 404 Not Found
     ...
 */
 ```
 
-### Want to share a folder with the web?
+## Want to share a folder with the web?
 
 ```
 /images
@@ -38,31 +47,100 @@ pronto();
 ```
 
 ```js
-pronto().open( 'images/' ); // Now all the files in images/ folder are served
+pronto().share('images/'); // Now all the files in images/ folder are served
 /** 
     GET /birthday.jpg
 
     HTTP 200 OK
+    Content-Type: image/jpg
     ...
 */
 ```
 
-### Want to restrict who you share it with?
+## Want to restrict who you share it with?
 
 ```js
-pronto().open( 'images/',
+pronto().share('images/',
   
-  when.visitor
-    .is.a.registered.user.
-    and
-    .is.visiting.from('Russia').
-    and
-    .is.using.an.iPhone(4).
-  and
-    except.when.it.is.the.week.end);
+  when.is.user.
+    and.
+    is.visiting.from('Russia').
+    and.
+    is.using.an.iPhone(4).
+    and.
+    method.is.GET.
+    and.
+    except.when.
+      it.is.the.week.end);
 ```
 
-### Want to execute your JS files via HTTP?
+## Want to share your Jade files rendered into HTML?
+
+```
+/views
+  /home.jade
+```
+
+```yaml
+//- home.jade
+h1 Hello
+```
+
+```js
+// pronto.js
+
+pronto().share('views');
+/** 
+    GET /home.jade
+
+    HTTP 200 OK
+    Content-Type: text/html; charset=utf-8
+    
+    <h1>Hello</h1>
+*/
+```
+
+## Want to execute JS functions via HTTP?
+
+```js
+// foo.js
+
+module.exports = function () { return 'hello'; };
+
+// pronto.js
+
+pronto().share('foo.js', { as: 'text', opener: 'js/function' } );
+/** 
+    GET /foo.js
+
+    HTTP 200 OK
+    Content-Type: text/plain; charset=utf-8
+    
+    hello
+*/
+```
+
+## Want to execute JS callbacks via HTTP?
+
+```js
+// foo.js
+
+module.exports = function (cb) { cb(null, 'hello') };
+
+// pronto.js
+
+pronto().share('foo.js', { as: 'text', opener: 'js/callback' } );
+/** 
+    GET /foo.js
+
+    HTTP 200 OK
+    Content-Type: text/plain; charset=utf-8
+    
+    hello
+*/
+```
+
+## Want to execute your JS promises via HTTP?
 
 ```js
 // foo.js
@@ -71,7 +149,55 @@ module.exports = function () { return 'hello'; }
 
 // pronto.js
 
-pronto().exec ( 'foo.js', { as: 'text' } );
+pronto().share('foo.js', { as: 'text', opener: 'js/promise' } );
+/** 
+    GET /foo.js
+
+    HTTP 200 OK
+    Content-Type: text/plain; charset=utf-8
+    
+    hello
+*/
+```
+
+## Want to execute your JS emitters via HTTP?
+
+```js
+// foo.js
+
+function Emitter () {
+  process.nextTick(function () {
+    this.emit('OK', 'hello');
+  }.bind(this));
+}
+
+require('util').inherits(Emitter, require('events').EventEmiiter);
+
+module.exports = Emitter;
+
+// pronto.js
+
+pronto().share('foo.js', { opener: 'js/emitter', as: { 'text': { on: 'OK' } } });
+/** 
+    GET /foo.js
+
+    HTTP 200 OK
+    Content-Type: text/plain; charset=utf-8
+    
+    hello
+*/
+```
+
+## Want to execute your JS routes via HTTP?
+
+```js
+// foo.js
+
+module.exports = function (req, res, next) { res.send('hello'); }
+
+// pronto.js
+
+pronto().share('foo.js', { as: 'text', opener: 'js/route' } );
 /** 
     GET /foo.js
 
