@@ -1,6 +1,6 @@
 {
   "name": "prontojs",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Web server based on Express",
   "main": "lib/Pronto.js",
   "dependencies": {
